@@ -7,7 +7,8 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets the absolute path of the script
 sqlite_file_name = os.path.join(BASE_DIR, "heros.db")  # Uses absolute path
 
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+sqlite_url = sqlite_url = f"sqlite:///{sqlite_file_name}"
+
 connect_args = {"check_same_thread": False}
 engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
 

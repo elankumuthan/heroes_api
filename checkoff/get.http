@@ -1,0 +1,11 @@
+### Get All Heroes
+GET http://127.0.0.1:8000/heroes/
+
+### Get Hero by ID (Batman)
+GET http://127.0.0.1:8000/heroes/2
+
+### Sort heros by age
+GET http://127.0.0.1:8000/heroes/?sortBy=age
+
+### Sort heros by age limit to 3
+GET http://127.0.0.1:8000/heroes/?sortBy=age&count=3

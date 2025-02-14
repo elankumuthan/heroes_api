@@ -1,0 +1,13 @@
+### Upload a file
+POST http://localhost:8000/uploadfile/
+Content-Type: multipart/form-data; boundary=----CustomBoundary123
+
+------CustomBoundary123
+Content-Disposition: form-data; name="file"; filename="spiderman.jpg"
+Content-Type: image/jpeg
+
+< ../app/spiderman.jpg
+------CustomBoundary123--
+
+### Returns an image
+GET http://127.0.0.1:8000/image

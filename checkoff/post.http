@@ -12,6 +12,20 @@ Content-Type: application/json
 }
 
 ###Create a new hero
+### no id
+POST http://127.0.0.1:8000/hero/
+Content-Type: application/json
+
+{
+  "name": "Batman",
+  "age": 54,
+  "secret_power": "Superhuman strength, durability, endurance, and healing",
+  "gender": "Male",
+  "real_name": "Bruce Banner"
+}
+
+###Create a new hero
+### no name
 POST http://127.0.0.1:8000/hero/
 Content-Type: application/json
 
@@ -20,21 +34,9 @@ Content-Type: application/json
   "age": 54,
   "secret_power": "Superhuman strength, durability, endurance, and healing",
   "gender": "Male",
-  "real_name": "Bruce Banner"
+  "real_name": "Bruce Banner",
+  "id": 36
 }
-
-### Get All Heroes
-GET http://127.0.0.1:8000/heroes/
-
-### Get Hero by ID (Batman)
-GET http://127.0.0.1:8000/heroes/2
-
-### Sort heros by age
-GET http://127.0.0.1:8000/heroes/?sortBy=age
-
-### Sort heros by age limit to 3
-GET http://127.0.0.1:8000/heroes/?sortBy=age&count=3
-
 
 ### Update a Hero details (Batman)
 ### name Batman --> The Bat-Man
@@ -45,26 +47,6 @@ curl -X PUT "http://127.0.0.1:8000/heroes/2" \
      -d '{
           "name": "The Bat-Man",
           "age": 24,
-          "secret_power": "Genius, Ultra-rich, Master Martial Artist",
+          "secret_power": "Genius, Ultra-rich, Master Martial Artist"
      }'
 
-
-### Delete a Hero (Wonder-Woman)
-curl -X DELETE "http://127.0.0.1:8000/heroes/3"
-
-
-### Upload a file
-
-POST http://localhost:8000/uploadfile/
-Content-Type: multipart/form-data; boundary=----CustomBoundary123
-
-------CustomBoundary123
-Content-Disposition: form-data; name="file"; filename="spiderman.jpg"
-Content-Type: image/jpeg
-
-< ../app/spiderman.jpg
-------CustomBoundary123--
-
-
-### Returns an image
-GET http://127.0.0.1:8000/image
