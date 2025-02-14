@@ -547,3 +547,24 @@ curl -X DELETE "http://localhost:8000/heroes/delete_all" \
 }
 ```
 
+
+## Idempotent or Non-Idempotent routes
+
+These routes should always produce the same result no matter how often it is called.
+
+| Route | Method | Idempotent? | Reason|
+|-------|--------|--------------|------|
+|GET /heroes/ | GET |Yes|Always returns the same heroes unless modified by another request|
+|GET /heroes/{hero_id}|GET|Yes|Always returns the same heroes unless modified by another request|
+|DELETE /heroes/delete_all|DELETE|Yes|If there are no heroes in the database, repeated request will always return the same response unless modified by another request|
+|DELETE /heroes/{hero_id}|DELETE|Yes|If there are no heroes in the database, repeated request will always return the same response unless modified by another request|
+|POST /heroes/reset_all|POST|Yes|If the default heroes already exist in the database, multiple request does not change the response|
+|POST /hero/|POST|No|Each request creates a new hero|
+|PUT /heroes/{hero_id}|PUT|No|	Updates a hero’s details, modifying the database.|
+
+
+
+
+
+
+
