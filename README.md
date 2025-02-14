@@ -9,12 +9,12 @@ This FastAPI helps to provide Hero Management API, aloowing users to create, rea
 ### Operations on heroes
 
 
-Method | Endpoint | Description
-POST | hero/ | Create a new hero
-GET | /heroes/ | Get all heroes
-GET | /heroes/{hero_id} | Get hero by ID
-PUT | /heroes/{hero_id}	| Update a hero
-DELETE	| /heroes/{hero_id}	| Delete a hero
+|Method | Endpoint | Description|
+|POST | hero/ | Create a new hero|
+|GET | /heroes/ | Get all heroes|
+|GET | /heroes/{hero_id} | Get hero by ID|
+|PUT | /heroes/{hero_id}	| Update a hero|
+|DELETE	| /heroes/{hero_id}	| Delete a hero|
 
 ### File Operations
 
