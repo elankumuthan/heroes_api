@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Query, UploadFile, File
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Depends, HTTPException, Query, Header
 from sqlmodel import Session, select
 from app.database import create_db_and_tables, get_session, engine
 from app.models import Hero
@@ -52,6 +51,8 @@ def read_heroes(
 
     return heroes
 
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
+
 # Read a specific hero by ID
 @app.get("/heroes/{hero_id}")
 def read_hero(hero_id: int, session: SessionDep) -> Hero:
@@ -59,16 +60,6 @@ def read_hero(hero_id: int, session: SessionDep) -> Hero:
     if not hero:
         raise HTTPException(status_code=404, detail="Hero not found")
     return hero
-
-# Delete a hero by ID
-@app.delete("/heroes/{hero_id}")
-def delete_hero(hero_id: int, session: SessionDep):
-    hero = session.get(Hero, hero_id)
-    if not hero:
-        raise HTTPException(status_code=404, detail="Hero not found")
-    session.delete(hero)
-    session.commit()
-    return {"ok": True}
 
 # Update hero by id
 @app.put("/heroes/{hero_id}", response_model=Hero)
@@ -90,23 +81,68 @@ def update_hero(hero_id: int, hero_update: Hero, session: SessionDep):
 
     return hero
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)): 
-    upload_dir = "uploads"
-    os.makedirs(upload_dir, exist_ok=True)
-    file_path = os.path.join(upload_dir, file.filename)
-    contents = await file.read()
-    with open(file_path, "wb") as f:
-            f.write(contents)
-            
-    return {
-            "filename": file.filename,
-            "size": len(contents),
-            "file_type": file.content_type,
-            "path": file_path
-        }
+@app.delete("/heroes/delete_all")
+def delete_all(session: SessionDep, authorization: str = Header(None)):
+    if not ADMIN_TOKEN:
+        raise HTTPException(status_code=500, detail="Admin token not set on the server")
 
-@app.get("/image")
-def return_image():
-    file_path = "app/spiderman.jpg"
-    return FileResponse(file_path, media_type="image/png")
+    if authorization != f"Bearer {ADMIN_TOKEN}":
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    heroes = session.exec(select(Hero)).all()
+
+    if not heroes:
+        return {"message": "No heroes in the database to delete"}
+
+    deleted_ids = [hero.id for hero in heroes]
+
+    for hero in heroes:
+        session.delete(hero)
+
+    session.commit()
+    return {"message": f"Deleted heroes with IDs {deleted_ids}"}
+
+# Make sure this route comes **after** /heroes/delete_all
+@app.delete("/heroes/{hero_id}")
+def delete_hero(hero_id: int, session: SessionDep, authorization: str = Header(None)):
+    if not ADMIN_TOKEN:
+        raise HTTPException(status_code=500, detail="Admin token not set on the server")
+
+    if authorization != f"Bearer {ADMIN_TOKEN}":
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    hero = session.get(Hero, hero_id)
+    if not hero:
+        raise HTTPException(status_code=404, detail="Hero not found")
+
+    session.delete(hero)
+    session.commit()
+    return {"message": f"Hero with ID {hero_id} deleted"}
+
+
+@app.post("/heroes/reset_all")
+def reset_all(session: SessionDep, authorization: str = Header(None)):
+    if not ADMIN_TOKEN:
+        raise HTTPException(status_code=500, detail="Admin token not set on the server")
+    if authorization != f"Bearer {ADMIN_TOKEN}":
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    # Predefined superheroes
+    heroes = [
+        Hero(id=1, name="Superman", age=35, secret_power="Flight", gender="Male", real_name="Clark Kent"),
+        Hero(id=2, name="Batman", age=40, secret_power="Genius", gender="Male", real_name="Bruce Wayne"),
+        Hero(id=3, name="Wonder Woman", age=5000, secret_power="Super Strength", gender="Female", real_name="Diana Prince"),
+        Hero(id=4, name="Iron Man", age=45, secret_power="Advanced Armor", gender="Male", real_name="Tony Stark"),
+        Hero(id=5, name="Spider-Man", age=18, secret_power="Wall Climbing", gender="Male", real_name="Peter Parker"),
+    ]
+
+    # Check if heroes already exist
+    existing_heroes = session.exec(select(Hero)).all()
+    if existing_heroes:
+        return {"message": "Heroes already exist in the database"}
+
+    # Insert heroes into the database
+    session.add_all(heroes)
+    session.commit()
+
+    return {"message": "Default heroes added successfully", "added_heroes": [hero.id for hero in heroes]}

@@ -3,12 +3,12 @@ POST http://127.0.0.1:8000/hero/
 Content-Type: application/json
 
 {
-  "name": "Ant-man",
-  "age": 35,
+  "name": "An-man",
+  "age": 70,
   "secret_power": "Shrink and Grow",
   "gender": "Male",
   "real_name": "Scott Lang",
-  "id": 40
+  "id": 65
 }
 
 ###Create a new hero

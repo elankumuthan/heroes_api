@@ -1,2 +1,11 @@
+### Delete without Authorization
+curl -X DELETE "http://127.0.0.1:8000/heroes/1"
+
 ### Delete a Hero (Wonder-Woman)
-curl -X DELETE "http://127.0.0.1:8000/heroes/3"
+curl -X DELETE "http://localhost:8000/heroes/1" \
+     -H "Authorization: Bearer supersecureadminkey"
+     
+### Delete a Hero (Wonder-Woman)
+
+curl -X DELETE "http://localhost:8000/heroes/delete_all" \
+     -H "Authorization: Bearer supersecureadminkey"
