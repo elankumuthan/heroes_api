@@ -1,4 +1,4 @@
-# HERO API LAB 1
+# RestAPI Lab 1 - HEROES
 
 ## Overview 
 This FastAPI helps to provide Hero Management API, aloowing users to create, read, update and delete heroes. It also supports file uploading and returning an image.
