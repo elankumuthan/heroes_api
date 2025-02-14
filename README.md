@@ -12,6 +12,7 @@ This FastAPI helps to provide Hero Management API, aloowing users to create, rea
 |Method | Endpoint | Description|
 |--------|---------|------------|
 |POST | hero/ | Create a new hero|
+|POST| /heroes/reset_all | Reset back all default heroes|
 |GET | /heroes/ | Get all heroes|
 |GET | /heroes/{hero_id} | Get hero by ID|
 |PUT | /heroes/{hero_id}	| Update a hero|
