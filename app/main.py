@@ -22,6 +22,10 @@ def on_startup():
 def create_hero(hero: Hero, session: SessionDep):
     if not hero.name:
         raise HTTPException(status_code=400, detail="Hero name is required")
+    if not hero.id:
+        raise HTTPException(status_code=400, detail="Hero ID is required")
+    if hero.id in {hero.id for hero in session.exec(select(Hero))}:
+        raise HTTPException(status_code=400, detail="Hero ID already exists")
 
     session.add(hero)
     session.commit()

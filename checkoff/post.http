@@ -7,7 +7,8 @@ Content-Type: application/json
   "age": 35,
   "secret_power": "Shrink and Grow",
   "gender": "Male",
-  "real_name": "Scott Lang"
+  "real_name": "Scott Lang",
+  "id": 40
 }
 
 ###Create a new hero
