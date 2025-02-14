@@ -16,20 +16,7 @@ This FastAPI helps to provide Hero Management API, aloowing users to create, rea
 |GET | /heroes/{hero_id} | Get hero by ID|
 |PUT | /heroes/{hero_id}	| Update a hero|
 |DELETE	| /heroes/{hero_id}	| Delete a hero|
-
-### File Operations
-
-|Method |	Endpoint |	Description|
-|------|------------|--------------|
-|POST |	/uploadfile/ |	Upload a file|
-
-Uploaded files are stored in the uploads/ directory.
-
-### Return Binary Content
-
-|Method |	Endpoint |	Description|
-|--------|------------|------------|
-|GET |	/image |	Serve an image (app/spiderman.jpg)|
+|DELETE | /heroes/delete_all | Delete all heroes|
 
 
 ## Installation
@@ -53,7 +40,7 @@ You can send a request from post.http which has some test cases.
 
 ## Test Cases
 
-### Operations on hero
+### Post request
 
 ### 1. Create new hero
 
@@ -126,7 +113,32 @@ curl -X POST "http://localhost:8000/hero/" \
 }
 ```
 
-### 4. Get all heroes
+### 4. RESET back default heroes
+
+```
+curl -X POST "http://localhost:8000/heroes/reset_all" \
+     -H "Authorization: Bearer supersecureadminkey"
+```
+
+### Expected response 
+
+```
+{
+  "message": "Default heroes added successfully",
+  "added_heroes": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}
+```
+
+
+### Get request 
+
+### 1. Get all heroes
 
 ```
 curl http://127.0.0.1:8000/heroes/ 
@@ -187,7 +199,7 @@ curl http://127.0.0.1:8000/heroes/
 ]
 ```
 
-### 5. Get hero by id
+### 2. Get hero by id
 
 ```
 curl GET http://127.0.0.1:8000/heroes/2
@@ -207,7 +219,7 @@ curl GET http://127.0.0.1:8000/heroes/2
 
 ```
 
-### 6. Sort hero by age
+### 3. Sort hero by age
 
 ```
 curl GET http://127.0.0.1:8000/heroes/?sortBy=age
@@ -268,7 +280,7 @@ Expected response:
 ]
 ```
 
-### 7. Sort hero by age and limit to 3
+### 4. Sort hero by age and limit to 3
 
 ```
 curl GET http://127.0.0.1:8000/heroes/?sortBy=age&count=3
@@ -304,8 +316,166 @@ curl GET http://127.0.0.1:8000/heroes/?sortBy=age&count=3
   }
 ]
 ```
+### 5. Sort hero by id
 
-### 8. Update a hero detail 
+```
+curl GET http://127.0.0.1:8000/heroes/?sortBy=id
+```
+
+Expected response:
+
+```
+[
+  {
+    "name": "Superman",
+    "secret_power": "Flight",
+    "id": 1,
+    "age": 35,
+    "real_name": "Clark Kent",
+    "gender": "Male"
+  },
+  {
+    "name": "Batman",
+    "secret_power": "Genius",
+    "id": 2,
+    "age": 40,
+    "real_name": "Bruce Wayne",
+    "gender": "Male"
+  },
+  {
+    "name": "Wonder Woman",
+    "secret_power": "Super Strength",
+    "id": 3,
+    "age": 5000,
+    "real_name": "Diana Prince",
+    "gender": "Female"
+  },
+  {
+    "name": "Iron Man",
+    "secret_power": "Advanced Armor",
+    "id": 4,
+    "age": 45,
+    "real_name": "Tony Stark",
+    "gender": "Male"
+  },
+  {
+    "name": "Spider-Man",
+    "secret_power": "Wall Climbing",
+    "id": 5,
+    "age": 18,
+    "real_name": "Peter Parker",
+    "gender": "Male"
+  }
+]
+```
+
+### 6. Sort hero by name
+
+```
+curl GET http://127.0.0.1:8000/heroes/?sortBy=name
+```
+
+Expected response:
+
+```
+[
+  {
+    "name": "Batman",
+    "secret_power": "Genius",
+    "id": 2,
+    "age": 40,
+    "real_name": "Bruce Wayne",
+    "gender": "Male"
+  },
+  {
+    "name": "Iron Man",
+    "secret_power": "Advanced Armor",
+    "id": 4,
+    "age": 45,
+    "real_name": "Tony Stark",
+    "gender": "Male"
+  },
+  {
+    "name": "Spider-Man",
+    "secret_power": "Wall Climbing",
+    "id": 5,
+    "age": 18,
+    "real_name": "Peter Parker",
+    "gender": "Male"
+  },
+  {
+    "name": "Superman",
+    "secret_power": "Flight",
+    "id": 1,
+    "age": 35,
+    "real_name": "Clark Kent",
+    "gender": "Male"
+  },
+  {
+    "name": "Wonder Woman",
+    "secret_power": "Super Strength",
+    "id": 3,
+    "age": 5000,
+    "real_name": "Diana Prince",
+    "gender": "Female"
+  }
+]
+```
+
+### 7. Sort hero by gender
+
+```
+curl GET http://127.0.0.1:8000/heroes/?sortBy=gender
+```
+
+Expected response:
+
+```
+[
+  {
+    "name": "Wonder Woman",
+    "secret_power": "Super Strength",
+    "id": 3,
+    "age": 5000,
+    "real_name": "Diana Prince",
+    "gender": "Female"
+  },
+  {
+    "name": "Superman",
+    "secret_power": "Flight",
+    "id": 1,
+    "age": 35,
+    "real_name": "Clark Kent",
+    "gender": "Male"
+  },
+  {
+    "name": "Batman",
+    "secret_power": "Genius",
+    "id": 2,
+    "age": 40,
+    "real_name": "Bruce Wayne",
+    "gender": "Male"
+  },
+  {
+    "name": "Iron Man",
+    "secret_power": "Advanced Armor",
+    "id": 4,
+    "age": 45,
+    "real_name": "Tony Stark",
+    "gender": "Male"
+  },
+  {
+    "name": "Spider-Man",
+    "secret_power": "Wall Climbing",
+    "id": 5,
+    "age": 18,
+    "real_name": "Peter Parker",
+    "gender": "Male"
+  }
+]
+```
+### PUT request
+### 1. Update a hero detail 
 
 ```
 curl -X PUT "http://127.0.0.1:8000/heroes/2" \
@@ -329,56 +499,50 @@ curl -X PUT "http://127.0.0.1:8000/heroes/2" \
 }
 ```
 
-### 9. Delete a hero 
+### DELETE request
+
+### 1. Delete a hero WITHOUT authorization
 
 ```
-curl -X DELETE "http://127.0.0.1:8000/heroes/3"
+curl -X DELETE "http://127.0.0.1:8000/heroes/1"
 ```
 
 ### Expected response 
 
 ```
 {
-"ok": true
+  "detail": "Unauthorized"
 }
 
 ```
 
-### File Operations
-
-### 1. Upload a file 
+### 2. Delete a hero WITH authorization
 
 ```
-POST http://localhost:8000/uploadfile/
-Content-Type: multipart/form-data; boundary=----CustomBoundary123
-
-------CustomBoundary123
-Content-Disposition: form-data; name="file"; filename="spiderman.jpg"
-Content-Type: image/jpeg
-
-< ../app/spiderman.jpg
-------CustomBoundary123--
+curl -X DELETE "http://localhost:8000/heroes/1" \
+     -H "Authorization: Bearer supersecureadminkey"
 ```
 
-## Expected response
+### Expected response 
 
 ```
 {
-    "filename": "spiderman.jpg",
-    "size": 44148,
-    "file_type": "image/jpeg",
-    "path": "uploads/spiderman.jpg"
+  "message": "Hero with ID 1 deleted"
 }
 ```
 
-### Return binary content 
-
-### 1. Return an image
+### 3. Delete all heroes WITH authorization
 
 ```
-curl GET http://127.0.0.1:8000/image
+curl -X DELETE "http://localhost:8000/heroes/delete_all" \
+     -H "Authorization: Bearer supersecureadminkey"
 ```
-### Expected response:
-![spiderman](https://github.com/user-attachments/assets/d19b97b6-91db-4ba3-858b-3506c133325b)
 
+### Expected response 
+
+```
+{
+  "message": "Deleted heroes with IDs [2, 3, 4, 5]"
+}
+```
 
